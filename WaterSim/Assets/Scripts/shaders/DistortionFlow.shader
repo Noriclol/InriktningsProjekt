@@ -4,7 +4,7 @@
     {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        [NoScaleOffset] _FlowMap("Flow (RG)", 2D) = "black" {}
+        [NoScaleOffset] _FlowMap("Flow (RG, A noise)", 2D) = "black" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
     }
@@ -13,7 +13,7 @@
         Tags { "RenderType"="Opaque" }
         LOD 200
         CGPROGRAM
-        #include "Assets\Scripts\shaders\.cginc files\FLOW.cginc"
+        #include "Assets/Scripts/Shaders/Include/Flow.cginc"
         #pragma surface surf Standard fullforwardshadows
         #pragma target 3.0
 
@@ -35,8 +35,10 @@
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             float2 flowVector = tex2D(_FlowMap, IN.uv_MainTex).rg * 2 - 1;
-            float2 uv = FlowUV(IN.uv_MainTex, flowVector, _Time.y);
-            fixed4 c = tex2D (_MainTex, uv) * _Color;
+            float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
+            float time = _Time.y + noise;
+            float3 uvw = FlowUVW(IN.uv_MainTex, flowVector, time);
+            fixed4 c = tex2D (_MainTex, uvw.xy)* uvw.z * _Color;
             o.Albedo = c.rgb;
             //o.Albedo = float3(flowVector, 0);
 
