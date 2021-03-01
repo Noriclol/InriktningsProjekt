@@ -5,6 +5,9 @@
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         [NoScaleOffset] _FlowMap("Flow (RG, A noise)", 2D) = "black" {}
+        _UJump("U jump per phase", Range(-0.25, 0.25)) = 0.25
+        _VJump("V jump per phase", Range(-0.25, 0.25)) = 0.25
+        _FlowStrength("FlowStrength", Range(0, 1)) = 1
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
     }
@@ -18,6 +21,8 @@
         #pragma target 3.0
 
         sampler2D _MainTex, _FlowMap;
+        float _UJump, _VJump, _FlowStrength;
+
 
         struct Input
         {
@@ -37,8 +42,16 @@
             float2 flowVector = tex2D(_FlowMap, IN.uv_MainTex).rg * 2 - 1;
             float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
             float time = _Time.y + noise;
-            float3 uvw = FlowUVW(IN.uv_MainTex, flowVector, time);
-            fixed4 c = tex2D (_MainTex, uvw.xy)* uvw.z * _Color;
+            float2 jump = float2(_UJump, _VJump);
+
+            float3 uvwA = FlowUVW(IN.uv_MainTex, flowVector, jump, _FlowStrength, time, false);
+            float3 uvwB = FlowUVW(IN.uv_MainTex, flowVector, jump, _FlowStrength, time, true);
+
+            fixed4 texA = tex2D(_MainTex, uvwA.xy) * uvwA.z;
+            fixed4 texB = tex2D(_MainTex, uvwB.xy) * uvwB.z;
+
+            fixed4 c = (texA + texB) * _Color;
+
             o.Albedo = c.rgb;
             //o.Albedo = float3(flowVector, 0);
 
