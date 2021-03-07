@@ -61,9 +61,8 @@
             float2 jump = float2(_UJump, _VJump);
 
 
-            //UVs used for normals
-            float3 uvwA = FlowUVW(IN.uv_MainTex, flow.xy, jump, _FlowOffset, _Tiling, time, false);
-            float3 uvwB = FlowUVW(IN.uv_MainTex, flow.xy, jump, _FlowOffset, _Tiling, time, true);
+            
+            sampler
 
             //height
             float finalHeightScale = flow.z * _HeightScaleModulated + _HeightScale;
