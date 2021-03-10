@@ -5,7 +5,9 @@
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         [NoScaleOffset] _FlowMap("Flow (RG, A noise)", 2D) = "black" {}
-        
+        //[NoScaleOffset] _NormalMap("Normals", 2D) = "bump" {}
+        [NoScaleOffset] _DerivHeightMap("Deriv (AG) Height (B)", 2D) = "black" {}
+
         //waveFunctions
         _WaveA("Wave A (dir, steepness, wavelength)", Vector) = (1,0,0.5,10)
         _WaveB("Wave B", Vector) = (0,1,0.25,20)
@@ -19,6 +21,10 @@
         _FlowStrength("Flow Strength", Float) = 1
         _FlowOffset("Flow Offset", Float) = 0
 
+        //WaterFog
+        _WaterFogDensity("Water Fog Density", Range(0, 2)) = 0.1
+        //Refractions
+        _RefractionStrength("Refraction Strength", Range(0, 1)) = 0.25
 
         //smoothness and metallic
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
@@ -26,28 +32,42 @@
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"= "Transparent" "Queue" = "Transparent"  }
         LOD 200
+
+
+        GrabPass {"_WaterBackground"}
+
 
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows  vertex:vert
+        #pragma surface surf Standard alpha vertex:vert finalcolor:ResetAlpha
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
 
-        sampler2D _MainTex, _FlowMap;
-        float _UJump, _VJump, _Tiling, _Speed, _FlowStrength, _FlowOffsetd;
+
+        //Surface
+        sampler2D _MainTex, _DerivHeightMap, _FlowMap;
+        float _UJump, _VJump, _Tiling, _Speed, _FlowStrength, _FlowOffset;
 
         struct Input
         {
             float2 uv_MainTex;
+            float4 screenPos;
         };
 
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+
+        //waves
         float4 _WaveA, _WaveB, _WaveC;
+
+        //underwaterfog
+        sampler2D _CameraDepthTexture, _WaterBackground;
+        float4 _TexelSize;
+        float _WaterFogDensity;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -55,7 +75,34 @@
         UNITY_INSTANCING_BUFFER_START(Props)
             // put more per-instance properties here
         UNITY_INSTANCING_BUFFER_END(Props)
+
+        //alpha reset after grabpass and render
+        void ResetAlpha(Input IN, SurfaceOutputStandard o, inout fixed4 color) {
+            color.a = 1;
+        }
         
+        
+        //heightmap unpack
+        float3 UnpackDerivativeHeight(float4 textureData) {
+            float3 dh = textureData.agb;
+            dh.xy = dh.xy * 2 - 1;
+            return dh;
+        }
+
+        //underwater fog func
+        float3 ColorBelowWater(float4 screenPos) {
+            float2 uv = screenPos.xy / screenPos.w;
+            float backgroundDepth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv));
+            float surfaceDepth = UNITY_Z_0_FAR_FROM_CLIPSPACE(screenPos.z);
+            float depthDifference = backgroundDepth - surfaceDepth;
+
+            float3 backgroundColor = tex2D(_WaterBackground, uv).rgb;
+            float fogFactor = exp2(-_WaterFogDensity * depthDifference);
+            return lerp(_Color, backgroundColor, fogFactor);
+        }
+
+
+        //UV + weight for 2d texture
         float3 FlowUVW(float2 uv, float2 flowVector, float2 jump, float flowOffset, float tiling, float time, bool flowB) {
             float phaseOffset = flowB ? 0.5 : 0;
             float progress = frac(time + phaseOffset);
@@ -119,23 +166,28 @@
             flowVector *= _FlowStrength;
 
             float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
-            float time = _Time.y + noise;
+            float time = _Time.y * _Speed + noise;
             float2 jump = float2(_UJump, _VJump);
 
             float3 uvwA = FlowUVW(IN.uv_MainTex, flowVector, jump, _FlowOffset, _Tiling, time, false);
             float3 uvwB = FlowUVW(IN.uv_MainTex, flowVector, jump, _FlowOffset, _Tiling, time, true);
+
+            float3 dhA = UnpackDerivativeHeight(tex2D(_DerivHeightMap, uvwA.xy)) * uvwA.z;
+            float3 dhB = UnpackDerivativeHeight(tex2D(_DerivHeightMap, uvwB.xy)) * uvwB.z;
+            o.Normal = normalize(float3(-(dhA.xy + dhB.xy), 1));
 
             fixed4 texA = tex2D(_MainTex, uvwA.xy) * uvwA.z;
             fixed4 texB = tex2D(_MainTex, uvwB.xy) * uvwB.z;
 
             fixed4 c = (texA + texB) * _Color;
             o.Albedo = c.rgb;
+            //o.Albedo = ColorBelowWater(IN.screenPos);
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
+            o.Emission = ColorBelowWater(IN.screenPos) * (1 - c.a);
             
         }
         ENDCG
     }
-    FallBack "Diffuse"
 }
