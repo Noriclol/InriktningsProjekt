@@ -117,6 +117,13 @@
             return uvw;
         }
 
+        //WaterPatchSampler
+        void WaterPatchSampler(float3 pos, float3 rot) {
+            //samples the waterpatch cords and sets its values. depending on where to put this func i might need to move it. fråga philip
+        }
+
+
+        void FindSupporting Cell
         //GerstnerWave
         float3 GerstnerWave(float4 wave, float3 p, inout float3 tangent, inout float3 binormal) {
             float steepness = wave.z;
