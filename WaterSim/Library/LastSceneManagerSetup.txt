@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/FlowTransparencyScene.unity
+- path: Assets/Scenes/EndlessOcean.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
