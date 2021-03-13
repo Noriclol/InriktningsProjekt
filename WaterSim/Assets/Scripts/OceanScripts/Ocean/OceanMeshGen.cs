@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+//[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class OceanMeshGen : MonoBehaviour
 {
     //public fields
@@ -10,16 +10,15 @@ public class OceanMeshGen : MonoBehaviour
     public Vector3 centerPos;
 
     //modifier fields
-    float scale = 1; //size
-    int gridSize = 10; //width
-    float cellSize = 10; // spacing
+    float scale; //size
+    float cellSize; // spacing
+    int gridSize; //width
 
 
     //grid internal fields;
     public int[] triangles;
     public Vector3[] vertices;
     public MeshFilter meshFilter;
-    //private Mesh mesh;
 
     //Constructor
     public OceanMeshGen(GameObject waterGridObj, float scale, float cellSize)
@@ -49,11 +48,6 @@ public class OceanMeshGen : MonoBehaviour
 
     }
 
-    void Start()
-    {
-        meshFilter = GetComponent<MeshFilter>();
-    }
-
     public void ShiftMesh(Vector3 oceanPos, float timeSinceStart) //shifts the oceangrid to new position
     {
         Vector3[] vertices = meshFilter.mesh.vertices;
@@ -62,14 +56,14 @@ public class OceanMeshGen : MonoBehaviour
             Vector3 vertex = vertices[i];
             Vector3 vertexGlobal = vertex + centerPos + oceanPos;
 
-            //vertex.y; //-----------------------------------------Missing link to heightsampler
+            vertex.y = WaveHandler.current.GetWaveYPos(vertexGlobal, timeSinceStart);
             vertices[i] = vertex;
         }
     }
 
     public void GenerateMesh() 
     {
-        
+
         //Data allocation
         List<Vector3[]> verts = new List<Vector3[]>(); ;
         List<int> tris = new List<int>(); ;
@@ -93,7 +87,7 @@ public class OceanMeshGen : MonoBehaviour
 
                 //if on first corner cancel gen triangle
                 if (x <= 0 || z <= 0) { continue; }
-                    
+
                 //The triangle south-west of the vertice
                 tris.Add(x + z * gridSize);
                 tris.Add(x + (z - 1) * gridSize);

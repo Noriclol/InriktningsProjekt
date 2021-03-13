@@ -19,9 +19,9 @@ MonoBehaviour:
     width: 1904
     height: 981
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Project
   m_RootView: {fileID: 6}
-  m_MinSize: {x: 875, y: 542}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 0
 --- !u!114 &2
@@ -45,10 +45,10 @@ MonoBehaviour:
     y: 30
     width: 1904
     height: 931
-  m_MinSize: {x: 678, y: 492}
+  m_MinSize: {x: 679, y: 492}
   m_MaxSize: {x: 14002, y: 14042}
   vertical: 0
-  controlID: 18
+  controlID: 137
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -94,8 +94,8 @@ MonoBehaviour:
     y: 0
     width: 545
     height: 624
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -150,7 +150,7 @@ MonoBehaviour:
     y: 0
     width: 1904
     height: 981
-  m_MinSize: {x: 875, y: 542}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
   m_TopViewHeight: 30
@@ -223,10 +223,10 @@ MonoBehaviour:
     y: 0
     width: 1592
     height: 931
-  m_MinSize: {x: 402, y: 492}
+  m_MinSize: {x: 403, y: 492}
   m_MaxSize: {x: 10001, y: 14042}
   vertical: 1
-  controlID: 19
+  controlID: 90
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -248,10 +248,10 @@ MonoBehaviour:
     y: 0
     width: 1592
     height: 624
-  m_MinSize: {x: 402, y: 221}
-  m_MaxSize: {x: 8002, y: 4021}
+  m_MinSize: {x: 403, y: 221}
+  m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 20
+  controlID: 91
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -317,21 +317,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/OceanScripts
+    - Assets/Scripts/OceanScripts/Ocean/Borrowed files
     m_Globs: []
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts/OceanScripts
+  - Assets/Scripts/OceanScripts/Ocean/Borrowed files
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\GameDesign\Documents\Git Projects\Klon\InriktningsProjekt\WaterSim
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 42}
-    m_SelectedIDs: b23a0000
-    m_LastClickedID: 15026
-    m_ExpandedIDs: 0000000090370000923700009437000096370000b23a000000ca9a3b
+    m_SelectedIDs: 26390000
+    m_LastClickedID: 14630
+    m_ExpandedIDs: 00000000983700009a3700009c3700009e370000b2370000ba37000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -359,7 +359,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000090370000923700009437000096370000
+    m_ExpandedIDs: 00000000983700009a3700009c3700009e370000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -481,9 +481,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 40f1ffff
-      m_LastClickedID: -3776
-      m_ExpandedIDs: 7ee5ffffccf1ffff54f5fffff8f6ffff38fbffffd8380000
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 60f8ffff44fbffff36370000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -543,9 +543,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -1.179493, y: 1.9256392, z: -4.2871637}
+    m_Target: {x: 4.712107, y: 40.257374, z: -66.37264}
     speed: 2
-    m_Value: {x: -1.179493, y: 1.9256392, z: -4.2871637}
+    m_Value: {x: 4.712107, y: 40.257374, z: -66.37264}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -556,13 +556,13 @@ MonoBehaviour:
   m_ExposureSliderValue: 0
   m_SceneViewState:
     showFog: 1
-    showMaterialUpdate: 1
+    showMaterialUpdate: 0
     showSkybox: 1
     showFlares: 1
     showImageEffects: 1
     showParticleSystems: 1
     showVisualEffectGraphs: 1
-    m_FxEnabled: 1
+    m_FxEnabled: 0
   m_Grid:
     xGrid:
       m_Fade:
@@ -592,9 +592,9 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.25141114, y: 0.5938228, z: -0.20262289, w: 0.7368764}
+    m_Target: {x: -0.3545491, y: -0.058664832, z: 0.022920664, w: -0.9326611}
     speed: 2
-    m_Value: {x: 0.25253195, y: 0.59355503, z: -0.20352589, w: 0.7365442}
+    m_Value: {x: -0.35463268, y: -0.058678657, z: 0.022926066, w: -0.93288094}
   m_Size:
     m_Target: 10
     speed: 2
@@ -604,8 +604,8 @@ MonoBehaviour:
     speed: 2
     m_Value: 0
   m_CameraSettings:
-    m_Speed: 0.82059
-    m_SpeedNormalized: 0.41
+    m_Speed: 1.6001996
+    m_SpeedNormalized: 0.7999998
     m_SpeedMin: 0.001
     m_SpeedMax: 2
     m_EasingEnabled: 1
