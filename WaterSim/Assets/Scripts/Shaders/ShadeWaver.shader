@@ -62,6 +62,7 @@
 
         //waves
         float4 _WaveA, _WaveB, _WaveC;
+        float _WaveTime;
 
         //underwaterfog
         sampler2D _CameraDepthTexture, _WaterBackground;
@@ -117,10 +118,6 @@
         }
 
         //WaterPatchSampler
-        void WaterPatchSampler(float3 pos, float3 rot) {
-            //samples the waterpatch cords and sets its values. depending on where to put this func i might need to move it. fråga philip
-        }
-
 
         void FindSupporting Cell
         //GerstnerWave
@@ -130,7 +127,7 @@
             float k = 2 * UNITY_PI / wavelength;
             float c = sqrt(9.8 / k);
             float2 d = normalize(wave.xy);
-            float f = k * (dot(d, p.xz) - c * _Time.y);
+            float f = k * (dot(d, p.xz) - c * _WaterTime);
             float a = steepness / k;
             
             tangent += float3(

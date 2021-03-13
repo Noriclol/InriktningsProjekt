@@ -43,3 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984791cdec97ffd4ba6aee5edf9f06ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipObj: {fileID: 0}
+  oceanObj: {fileID: 4475567439360712969, guid: e0fd7971977988c438895129dbecbeda, type: 3}
+  gridSize: 10
+  scale: 2
