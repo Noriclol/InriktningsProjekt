@@ -9,10 +9,11 @@ public class ShipAlgoritms
     private Vector3[] shipVerts;
     private int[] shipTris;
 
-    //triangles
+    //triangle algoritm function
     public Vector3[] shipVertsGlobal;
     float[] allDistancesToWater;
     public List<TriangleData> underWaterTriangleData = new List<TriangleData>();
+
 
     /*-----------TriangleAlgoritm----BEGIN-------*/
     public void InitTriCutAlgoritm(GameObject actor)
@@ -24,103 +25,111 @@ public class ShipAlgoritms
         shipVerts = actor.GetComponent<MeshFilter>().mesh.vertices;
         shipTris = actor.GetComponent<MeshFilter>().mesh.triangles;
 
+        //Debug.Log("tris " + shipTris);
+
+
         //The boat vertices in global position
         shipVertsGlobal = new Vector3[shipVerts.Length];
         //Find all the distances to water once because some triangles share vertices, so reuse
         allDistancesToWater = new float[shipVerts.Length];
     }
-    //public void GenerateUnderwaterMesh()
-    //{
-    //    //Reset
-    //    underWaterTriangleData.Clear();
+    public void GenerateUnderwaterMesh() // need to add watercontroller
+    {
+        //Reset
+        underWaterTriangleData.Clear();
 
-    //    //Find all the distances to water once because some triangles share vertices, so reuse
-    //    for (int j = 0; j < boatVertices.Length; j++)
-    //    {
-    //        //The coordinate should be in global position
-    //        Vector3 globalPos = boatTrans.TransformPoint(boatVertices[j]);
+        //Find all the distances to water once because some triangles share vertices, so reuse
+        for (int j = 0; j < shipVerts.Length; j++)
+        {
+            //The coordinate should be in global position
+            Vector3 globalPos = shipTransform.TransformPoint(shipVerts[j]);
 
-    //        //Save the global position so we only need to calculate it once here
-    //        //And if we want to debug we can convert it back to local
-    //        boatVerticesGlobal[j] = globalPos;
+            //Save the global position so we only need to calculate it once here
+            //And if we want to debug we can convert it back to local
+            shipVertsGlobal[j] = globalPos;
+            
 
-    //        allDistancesToWater[j] = WaterController.current.DistanceToWater(globalPos, Time.time);
-    //    }
+            allDistancesToWater[j] = WaveHandler.current.DistanceToSurface(globalPos, Time.time);
+            
+            
+            //Debug.DrawRay(globalPos,new Vector3(globalPos.x, allDistancesToWater[j], globalPos.z ) - globalPos, Color.green);
+        }
+        Debug.Log("Ship Sampler; " + WaveHandler.current.GetWaveYPos(new Vector3(0, 0, 0), Time.time));
 
-    //    //Add the triangles that are below the water
-    //    AddTriangles();
-    //}
+        //Add the triangles that are below the water
+        AddTriangles();
+    }
 
     //Add all the triangles that's part of the underwater mesh
-    //private void AddTriangles()
-    //{
-    //    //List that will store the data we need to sort the vertices based on distance to water
-    //    List<VertexData> vertexData = new List<VertexData>();
+    private void AddTriangles()
+    {
+        //List that will store the data we need to sort the vertices based on distance to water
+        List<VertexData> vertexData = new List<VertexData>();
 
-    //    //Add init data that will be replaced
-    //    vertexData.Add(new VertexData());
-    //    vertexData.Add(new VertexData());
-    //    vertexData.Add(new VertexData());
-
-
-    //    //Loop through all the triangles (3 vertices at a time = 1 triangle)
-    //    int i = 0;
-    //    while (i < boatTriangles.Length)
-    //    {
-    //        //Loop through the 3 vertices
-    //        for (int x = 0; x < 3; x++)
-    //        {
-    //            //Save the data we need
-    //            vertexData[x].distance = allDistancesToWater[boatTriangles[i]];
-
-    //            vertexData[x].index = x;
-
-    //            vertexData[x].globalVertexPos = boatVerticesGlobal[boatTriangles[i]];
-
-    //            i++;
-    //        }
+        //Add init data that will be replaced
+        vertexData.Add(new VertexData());
+        vertexData.Add(new VertexData());
+        vertexData.Add(new VertexData());
 
 
-    //        //All vertices are above the water
-    //        if (vertexData[0].distance > 0f && vertexData[1].distance > 0f && vertexData[2].distance > 0f)
-    //        {
-    //            continue;
-    //        }
+        //Loop through all the triangles (3 vertices at a time = 1 triangle)
+        int i = 0;
+        while (i < shipTris.Length)
+        {
+            //Loop through the 3 vertices
+            for (int x = 0; x < 3; x++)
+            {
+                //Save the data we need
+                vertexData[x].distance = allDistancesToWater[shipTris[i]];
+
+                vertexData[x].index = x;
+
+                vertexData[x].globalVertexPos = shipVertsGlobal[shipTris[i]];
+
+                i++;
+            }
 
 
-    //        //Create the triangles that are below the waterline
+            //All vertices are above the water
+            if (vertexData[0].distance > 0f && vertexData[1].distance > 0f && vertexData[2].distance > 0f)
+            {
+                continue;
+            }
 
-    //        //All vertices are underwater
-    //        if (vertexData[0].distance < 0f && vertexData[1].distance < 0f && vertexData[2].distance < 0f)
-    //        {
-    //            Vector3 p1 = vertexData[0].globalVertexPos;
-    //            Vector3 p2 = vertexData[1].globalVertexPos;
-    //            Vector3 p3 = vertexData[2].globalVertexPos;
 
-    //            //Save the triangle
-    //            underWaterTriangleData.Add(new TriangleData(p1, p2, p3));
-    //        }
-    //        //1 or 2 vertices are below the water
-    //        else
-    //        {
-    //            //Sort the vertices
-    //            vertexData.Sort((x, y) => x.distance.CompareTo(y.distance));
+            //Create the triangles that are below the waterline
 
-    //            vertexData.Reverse();
+            //All vertices are underwater
+            if (vertexData[0].distance < 0f && vertexData[1].distance < 0f && vertexData[2].distance < 0f)
+            {
+                Vector3 p1 = vertexData[0].globalVertexPos;
+                Vector3 p2 = vertexData[1].globalVertexPos;
+                Vector3 p3 = vertexData[2].globalVertexPos;
 
-    //            //One vertice is above the water, the rest is below
-    //            if (vertexData[0].distance > 0f && vertexData[1].distance < 0f && vertexData[2].distance < 0f)
-    //            {
-    //                AddTrianglesOneAboveWater(vertexData);
-    //            }
-    //            //Two vertices are above the water, the other is below
-    //            else if (vertexData[0].distance > 0f && vertexData[1].distance > 0f && vertexData[2].distance < 0f)
-    //            {
-    //                AddTrianglesTwoAboveWater(vertexData);
-    //            }
-    //        }
-    //    }
-    //}
+                //Save the triangle
+                underWaterTriangleData.Add(new TriangleData(p1, p2, p3));
+            }
+            //1 or 2 vertices are below the water
+            else
+            {
+                //Sort the vertices
+                vertexData.Sort((x, y) => x.distance.CompareTo(y.distance));
+
+                vertexData.Reverse();
+
+                //One vertice is above the water, the rest is below
+                if (vertexData[0].distance > 0f && vertexData[1].distance < 0f && vertexData[2].distance < 0f)
+                {
+                    AddTrianglesOneAboveWater(vertexData);
+                }
+                //Two vertices are above the water, the other is below
+                else if (vertexData[0].distance > 0f && vertexData[1].distance > 0f && vertexData[2].distance < 0f)
+                {
+                    AddTrianglesTwoAboveWater(vertexData);
+                }
+            }
+        }
+    }
 
     //Build the new triangles where one of the old vertices is above the water
     private void AddTrianglesOneAboveWater(List<VertexData> vertexData)
@@ -265,45 +274,42 @@ public class ShipAlgoritms
     }
 
     //Help class to store triangle data so we can sort the distances
+    public void DisplayMesh(Mesh mesh, string name, List<TriangleData> triangesData)
+    { //Display the underwater mesh
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> triangles = new List<int>();
 
+        //Build the mesh
+        for (int i = 0; i < triangesData.Count; i++)
+        {
+            //From global coordinates to local coordinates
+            Vector3 p1 = shipTransform.InverseTransformPoint(triangesData[i].p0);
+            Vector3 p2 = shipTransform.InverseTransformPoint(triangesData[i].p1);
+            Vector3 p3 = shipTransform.InverseTransformPoint(triangesData[i].p2);
 
-    //Display the underwater mesh
-    //public void DisplayMesh(Mesh mesh, string name, List<TriangleData> triangesData)
-    //{
-    //    List<Vector3> vertices = new List<Vector3>();
-    //    List<int> triangles = new List<int>();
+            vertices.Add(p1);
+            triangles.Add(vertices.Count - 1);
 
-    //    //Build the mesh
-    //    for (int i = 0; i < triangesData.Count; i++)
-    //    {
-    //        //From global coordinates to local coordinates
-    //        Vector3 p1 = boatTrans.InverseTransformPoint(triangesData[i].p1);
-    //        Vector3 p2 = boatTrans.InverseTransformPoint(triangesData[i].p2);
-    //        Vector3 p3 = boatTrans.InverseTransformPoint(triangesData[i].p3);
+            vertices.Add(p2);
+            triangles.Add(vertices.Count - 1);
 
-    //        vertices.Add(p1);
-    //        triangles.Add(vertices.Count - 1);
+            vertices.Add(p3);
+            triangles.Add(vertices.Count - 1);
+        }
 
-    //        vertices.Add(p2);
-    //        triangles.Add(vertices.Count - 1);
+        //Remove the old mesh
+        mesh.Clear();
 
-    //        vertices.Add(p3);
-    //        triangles.Add(vertices.Count - 1);
-    //    }
+        //Give it a name
+        mesh.name = name;
 
-    //    //Remove the old mesh
-    //    mesh.Clear();
+        //Add the new vertices and triangles
+        mesh.vertices = vertices.ToArray();
 
-    //    //Give it a name
-    //    mesh.name = name;
+        mesh.triangles = triangles.ToArray();
 
-    //    //Add the new vertices and triangles
-    //    mesh.vertices = vertices.ToArray();
-
-    //    mesh.triangles = triangles.ToArray();
-
-    //    mesh.RecalculateBounds();
-    //}
+        mesh.RecalculateBounds();
+    }
 
     /*-----------TriangleAlgoritm----END-------*/
 
@@ -311,12 +317,12 @@ public class ShipAlgoritms
 
 
 
-    /*-----------NewAlgoritm----BEGIN-------*/
+    /*-----------BouyancyForceAlgoritm----BEGIN-------*/
     /*-----------NewAlgoritm----END-------*/
 
     /*-----------Structs----BEGIN-------*/
 
-    public class VertexData
+    private class VertexData
     {
         //The distance to water from this vertex
         public float distance;

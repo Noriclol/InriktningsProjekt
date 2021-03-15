@@ -58,7 +58,7 @@
 
         half _Glossiness;
         half _Metallic;
-        fixed4 _Color;
+        fixed4 _Color; 
 
         //waves
         float4 _WaveA, _WaveB, _WaveC;
@@ -117,9 +117,6 @@
             return uvw;
         }
 
-        //WaterPatchSampler
-
-        void FindSupporting Cell
         //GerstnerWave
         float3 GerstnerWave(float4 wave, float3 p, inout float3 tangent, inout float3 binormal) {
             float steepness = wave.z;

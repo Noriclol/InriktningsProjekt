@@ -12,6 +12,7 @@ public class MeshGridGenerator : MonoBehaviour
     public float cellSize; // size of cell
     public int gridSize; // cell amount
     public Vector3 centerPos;
+    public bool CPUWaves;
 
     //grid internal fields;
     public int[] triangles;
@@ -26,11 +27,11 @@ public class MeshGridGenerator : MonoBehaviour
 
     private void Start()
 	{
-        Debug.Log("Start"); //debug
+        //Debug.Log("Start"); //debug
 
   //      if (!constructorCalled)
 		//{
-            Debug.Log("constructor not called"); //debug
+            //Debug.Log("constructor not called"); //debug
             gridTransform = gameObject.transform;
             meshFilter = gameObject.GetComponent<MeshFilter>();
             centerPos = gameObject.transform.localPosition;
@@ -45,14 +46,15 @@ public class MeshGridGenerator : MonoBehaviour
             float startTime = System.Environment.TickCount; //debug
             GenerateMesh();
             float timeToGenerateSea = (System.Environment.TickCount - startTime) / 1000f; //debug
-            Debug.Log("Sea was generated in " + timeToGenerateSea.ToString() + " seconds"); //debug
+            //Debug.Log("Sea was generated in " + timeToGenerateSea.ToString() + " seconds"); //debug
         //}
         //return;
     }
 
-	public MeshGridGenerator(GameObject parentObj, float cellSize, int gridSize)
+
+    public MeshGridGenerator(GameObject parentObj, float cellSize, int gridSize)
     {
-        Debug.Log("Constructor called");
+        //Debug.Log("Constructor called");
         //constructorCalled = true;
         //initialize fields;
         this.cellSize = cellSize;
@@ -73,10 +75,35 @@ public class MeshGridGenerator : MonoBehaviour
         float timeToGenerateSea = (System.Environment.TickCount - startTime) / 1000f; //debug
         Debug.Log("Sea was generated in " + timeToGenerateSea.ToString() + " seconds"); //debug
     }
-    
+    public void AnimateMesh(Vector3 oceanPos, float timeSinceStart)
+    {
 
-    //Public Functions
-    public void GenerateMesh()
+        Vector3[] vertices = meshFilter.mesh.vertices;
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            Vector3 vertex = vertices[i];
+            Vector3 vertexGlobal = vertex + centerPos + oceanPos;
+
+
+            //Get the water height at this coordinate
+
+            vertex.y = WaveHandler.current.GetWaveYPos(vertexGlobal, timeSinceStart);
+            
+            //From global to local - not needed if we use the saved local x,z position
+            vertices[i] = transform.InverseTransformPoint(vertex);
+
+            //Don't need to go from global to local because the y pos is always at 0
+            vertices[i] = vertex;
+        }
+        Debug.Log("Wave Sampler: " + WaveHandler.current.GetWaveYPos(new Vector3(0, 0, 0), timeSinceStart));
+        meshFilter.mesh.vertices = vertices;
+
+        meshFilter.mesh.RecalculateNormals();
+    }
+
+        //Public Functions
+        public void GenerateMesh()
     {
         //Data
         List<Vector3[]> verts = new List<Vector3[]>();
