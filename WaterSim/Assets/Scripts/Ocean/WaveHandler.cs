@@ -18,9 +18,9 @@ public class WaveHandler : MonoBehaviour
     public float noiseStrength = 1f;
     public float noiseWalk = 1f;
 
-    public Vector4 waveA = new Vector4(1f, 0f, 0.5f, 10f);
-    public Vector4 waveB = new Vector4(0f, 1f, 0.25f, 20f);
-    public Vector4 waveC = new Vector4(1f, 1f, 0.15f, 10f);
+    public Vector4 waveA = new Vector4(1f, 0f, 0.5f, 100f);
+    public Vector4 waveB = new Vector4(0f, 1f, 0.25f, 200f);
+    public Vector4 waveC = new Vector4(1f, 1f, 0.15f, 100f);
 
     //WaveFunctions SINE
     
@@ -36,7 +36,10 @@ public class WaveHandler : MonoBehaviour
    
     void Update()
     {
-        Shader.SetGlobalFloat("_WaveTime", Time.time);
+        //Shader.SetGlobalFloat("_WaveTime", Time.time);
+        //Shader.SetGlobalVector("_WaveA", waveA);
+        //Shader.SetGlobalVector("_WaveB", waveA);
+        //Shader.SetGlobalVector("_WaveC", waveA);
     }
 
 
@@ -58,13 +61,12 @@ public class WaveHandler : MonoBehaviour
 
     public float CustomWaveFunc(Vector3 pos, float timeSinceStart)
     {
-        Vector3 tangent =  new Vector3(1, 0, 0);
-        Vector3 binormal = new Vector3(0, 0, 1);
         Vector3 p = pos;
         p += GerstnerWave(waveA, pos, timeSinceStart);
         p += GerstnerWave(waveB, pos, timeSinceStart);
         p += GerstnerWave(waveC, pos, timeSinceStart);
         //Vector2 normal = (Vector3.Cross(binormal, tangent).normalized);
+        //p = p.normalized;
         return p.y;
     }
 

@@ -83,11 +83,10 @@ public class MeshGridGenerator : MonoBehaviour
         for (int i = 0; i < vertices.Length; i++)
         {
             Vector3 vertex = vertices[i];
-            Vector3 vertexGlobal = vertex + centerPos + oceanPos;
-
+            Vector3 vertexGlobal = vertex + /*centerPos +*/ oceanPos;
+            vertex.y = 0;
 
             //Get the water height at this coordinate
-
             vertex.y = WaveHandler.current.GetWaveYPos(vertexGlobal, timeSinceStart);
             
             //From global to local - not needed if we use the saved local x,z position
@@ -96,7 +95,7 @@ public class MeshGridGenerator : MonoBehaviour
             //Don't need to go from global to local because the y pos is always at 0
             vertices[i] = vertex;
         }
-        Debug.Log("Wave Sampler: " + WaveHandler.current.GetWaveYPos(new Vector3(0, 0, 0), timeSinceStart));
+        //Debug.Log("Wave Sampler: " + WaveHandler.current.GetWaveYPos(new Vector3(0, 0, 0), timeSinceStart));
         meshFilter.mesh.vertices = vertices;
 
         meshFilter.mesh.RecalculateNormals();

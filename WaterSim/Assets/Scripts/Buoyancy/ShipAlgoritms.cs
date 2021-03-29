@@ -54,7 +54,7 @@ public class ShipAlgoritms
             
             //Debug.DrawRay(globalPos,new Vector3(globalPos.x, allDistancesToWater[j], globalPos.z ) - globalPos, Color.green);
         }
-        Debug.Log("Ship Sampler; " + WaveHandler.current.GetWaveYPos(new Vector3(0, 0, 0), Time.time));
+        //Debug.Log("Ship Sampler; " + WaveHandler.current.GetWaveYPos(new Vector3(0, 0, 0), Time.time));
 
         //Add the triangles that are below the water
         AddTriangles();
