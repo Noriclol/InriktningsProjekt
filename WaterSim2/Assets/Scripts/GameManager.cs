@@ -8,9 +8,11 @@ public class GameManager : MonoBehaviour
     public static float secondsSinceStart;
 
     public GameObject oceanHandlerObj;
+    public GameObject player;
 
     WaveHandler waveHandler;
     OceanHandler oceanHandler;
+
     private void Start()
     {
         if(instance)
@@ -25,9 +27,10 @@ public class GameManager : MonoBehaviour
 
 
         //Instantiate oceanhandler
-        GameObject waterHandlerObj = Instantiate(oceanHandlerObj, oceanHandlerObj.transform.position, oceanHandlerObj.transform.rotation);
-        waterHandlerObj.SetActive(true);
-        waterHandlerObj.transform.parent = transform;
+        GameObject oHandlerObj = Instantiate(oceanHandlerObj, oceanHandlerObj.transform.position, oceanHandlerObj.transform.rotation);
+        oHandlerObj.SetActive(true);
+        oHandlerObj.transform.parent = transform;
+        oHandlerObj.GetComponent<OceanHandler>().playerObj = player;
 
 
     }

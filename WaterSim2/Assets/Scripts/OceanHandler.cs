@@ -43,10 +43,11 @@ public class OceanHandler : MonoBehaviour
         playerPos = playerObj.transform.position;
         MoveWaterToBoat();
         transform.position = oceanPos;
-        for (int i = 0; i < oceanGrids.Count; i++)
-        {
-            oceanGrids[i].MoveSea(oceanPos, Time.time);
-        }
+
+        //for (int i = 0; i < oceanGrids.Count; i++)
+        //{
+        //    oceanGrids[i].MoveSea(oceanPos, Time.time);
+        //}
     }
 
 
