@@ -7,7 +7,7 @@ Shader "Custom/OceanShader"
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
         _Metallic ("Metallic", Range(0,1)) = 0.0
-            _NoiseTex("Noise Texture", 2D) = "white" {}
+        _NoiseTex("Noise Texture", 2D) = "white" {} //noise for sinewaves
     }
     SubShader
     {
@@ -49,16 +49,18 @@ Shader "Custom/OceanShader"
         };
 
 
-        //Gerstnerwave
+
+        //gerstnerwave
         float3 GerstnerWave(float4 wave, float3 p, inout float3 tangent, inout float3 binormal) {
             float steepness = wave.z;
             float wavelength = wave.w;
             float k = 2 * UNITY_PI / wavelength;
             float c = sqrt(9.8 / k);
             float2 d = normalize(wave.xy);
-            float f = k * (dot(d, p.xz) - c * _Time.y);
+            float f = k * (dot(d, p.xz) - c * _WaterTime);
             float a = steepness / k;
 
+            //original formula
             //p.x += d.x * (a * cos(f));
             //p.y = a * sin(f);
             //p.z += d.y * (a * cos(f));
@@ -81,35 +83,30 @@ Shader "Custom/OceanShader"
         }
 
 
-        float3 getWavePos(float3 pos)
-        {
-
-            if (_WaveType == 0) {
-                pos.y = 0.0;
-
-                float waveType = pos.z;
-
-                pos.y += sin((_WaterTime * _WaterSpeed + waveType) / _WaterDistance) * _WaterScale;
-
-                //Add noise
-                pos.y += tex2Dlod(_NoiseTex, float4(pos.x, pos.z + sin(_WaterTime * 0.1), 0.0, 0.0) * _WaterNoiseWalk).a * _WaterNoiseStrength;
-
-                return pos;
-            }
-            else if (_WaveType == 1) {
-                pos.y = 0.0;
-                float3 p = pos;
-                float3 tangent = float3(1, 0, 0);
-                float3 binormal = float3(0, 0, 1);
-                pos += GerstnerWave(_WaveA, p, tangent, binormal);
-                pos += GerstnerWave(_WaveB, p, tangent, binormal);
-                pos += GerstnerWave(_WaveC, p, tangent, binormal);
-                //float3 normal = normalize(cross(binormal, tangent));
-                //vertexData.normal = normal;
-                return pos;
-            }
-            return pos;
-        }
+        //float3 getWavePos(float3 pos)
+        //{
+        //    if (_WaveType == 0) {
+        //        pos.y = 0.0;
+        //        float waveType = pos.z;
+        //        pos.y += sin((_WaterTime * _WaterSpeed + waveType) / _WaterDistance) * _WaterScale;
+        //        //Add noise
+        //        pos.y += tex2Dlod(_NoiseTex, float4(pos.x, pos.z + sin(_WaterTime * 0.1), 0.0, 0.0) * _WaterNoiseWalk).a * _WaterNoiseStrength;
+        //        return pos;
+        //    }
+        //    else if (_WaveType == 1) {
+        //        pos.y = 0.0;
+        //        float3 p = pos;
+        //        float3 tangent = float3(1, 0, 0);
+        //        float3 binormal = float3(0, 0, 1);
+        //        pos += GerstnerWave(_WaveA, p, tangent, binormal);
+        //        pos += GerstnerWave(_WaveB, p, tangent, binormal);
+        //        pos += GerstnerWave(_WaveC, p, tangent, binormal);
+        //        //float3 normal = normalize(cross(binormal, tangent));
+        //        //vertexData.normal = normal;
+        //        return pos;
+        //    }
+        //    return pos;
+        //}
 
         void vert(inout appdata_full IN)
         {
@@ -117,14 +114,42 @@ Shader "Custom/OceanShader"
             float4 worldPos = mul(unity_ObjectToWorld, IN.vertex);
 
             //Manipulate the position
-            float3 withWave = getWavePos(worldPos.xyz);
+            //float3 withWave = getWavePos();
 
+            //customwavefunc
+            float3 gridPoint = worldPos.xyz;
+            float3 tangent = float3(1, 0, 0);
+            float3 binormal = float3(0, 0, 1);
+            float3 p = gridPoint;
+            p += GerstnerWave(_WaveA, gridPoint, tangent, binormal);
+            p += GerstnerWave(_WaveB, gridPoint, tangent, binormal);
+            p += GerstnerWave(_WaveC, gridPoint, tangent, binormal);
+            float3 normal = normalize(cross(binormal, tangent));
+            //IN.vertex = p;
+            
             //Convert the position back to local
-            float4 localPos = mul(unity_WorldToObject, float4(withWave, worldPos.w));
+            float4 localPos = mul(unity_WorldToObject, float4(p.x, p.y, p.z, worldPos.w));
 
             //Assign the modified vertice
-            IN.vertex = localPos;
+            IN.vertex.xyz = localPos;
+            IN.normal = normal;
         }
+
+        //old vert
+        //void vert(inout appdata_full IN)
+        //{
+        //    //Get the global position of the vertice
+        //    float4 worldPos = mul(unity_ObjectToWorld, IN.vertex);
+
+        //    //Manipulate the position
+        //    float3 withWave = getWavePos(worldPos.xyz);
+
+        //    //Convert the position back to local
+        //    float4 localPos = mul(unity_WorldToObject, float4(withWave, worldPos.w));
+
+        //    //Assign the modified vertice
+        //    IN.vertex = localPos;
+        //}
 
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
