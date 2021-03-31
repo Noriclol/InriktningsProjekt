@@ -49,7 +49,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: 2bb5e7940d64e4510b915a23c753a3f3, type: 3}
-        m_Scale: {x: 10, y: 10}
+        m_Scale: {x: 5, y: 5}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -84,7 +84,7 @@ Material:
     - _ModulatedHeightScale: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RefractionStrength: 0.25
+    - _RefractionStrength: 0.236
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _Speed: 0.5
@@ -93,10 +93,10 @@ Material:
     - _UJump: 0.24
     - _UVSec: 0
     - _VJump: 0.2083333
-    - _WaterFogDensity: 0.93
+    - _WaterFogDensity: 0.22
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.30655247, g: 0.5147804, b: 0.6617647, a: 0.5372549}
+    - _Color: {r: 0.35292807, g: 0.71331054, b: 0.9716981, a: 0.5372549}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _UVJump: {r: 0, g: 0, b: 0, a: 0}
     - _WaterFogColor: {r: 0.30588236, g: 0.5137255, b: 0.6627451, a: 1}

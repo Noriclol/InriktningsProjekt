@@ -13,7 +13,7 @@ public class OceanHandler : MonoBehaviour
 
     //SquareParameters
     private float squareWidth = 1000f;
-    private float innerGridRes = 10f;
+    private float innerGridRes = 5f;
     private float outerGridRes = 20f;
 
     List<ProceduralGrid> oceanGrids = new List<ProceduralGrid>();

@@ -14,14 +14,7 @@ public class TestBuoyGerst : MonoBehaviour
     void Update()
     {
         origo.position = new Vector3(0,0,0);
-        //var newWaveHeight = WaveHandler.instance.CustomWaveFunc2Reverse(transform.position, GameManager.secondsSinceStart);
-        //var buoyCurrentPosition = transform.position;
-        //Vector3 nextBuoyPosition = new Vector3(buoyCurrentPosition.x,buoyCurrentPosition.y + (newWaveHeight.y-buoyCurrentPosition.y),buoyCurrentPosition.z);
-        //Debug.Log("X: " + origo.position.x + "Z: " + origo.position.z);
-        //transform.position = nextBuoyPosition;
-        //transform.position = new Vector3(transform.position.x, WaveHandler.instance.CustomWaveFunc(transform.position, GameManager.secondsSinceStart), transform.position.z);
-        transform.position = WaveHandler.instance.CustomWaveFunc2(origo.position, GameManager.secondsSinceStart);
-        //transform.position = WaveHandler.instance.CustomWaveFunc2Reverse(transform.position, GameManager.secondsSinceStart);
-
+        //transform.position = WaveHandler.instance.CustomWaveFunc2(origo.position, GameManager.secondsSinceStart); //aproximated height of xy
+        transform.position = new Vector3(0, WaveHandler.instance.CustomWaveFunc3(origo.position, GameManager.secondsSinceStart), 0); // approximated height of xy but with unmodified xy
     }
 }

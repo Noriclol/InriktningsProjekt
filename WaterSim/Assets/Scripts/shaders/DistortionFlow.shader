@@ -60,10 +60,6 @@
             float time = _Time.y * _Speed + noise;
             float2 jump = float2(_UJump, _VJump);
 
-
-            
-            sampler
-
             //height
             float finalHeightScale = flow.z * _HeightScaleModulated + _HeightScale;
 

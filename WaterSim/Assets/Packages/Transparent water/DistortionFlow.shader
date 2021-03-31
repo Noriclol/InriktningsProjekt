@@ -58,24 +58,13 @@
 			float time = _Time.y * _Speed + noise;
 			float2 jump = float2(_UJump, _VJump);
 
-			float3 uvwA = FlowUVW(
-				IN.uv_MainTex, flow.xy, jump,
-				_FlowOffset, _Tiling, time, false
-			);
-			float3 uvwB = FlowUVW(
-				IN.uv_MainTex, flow.xy, jump,
-				_FlowOffset, _Tiling, time, true
-			);
+			float3 uvwA = FlowUVW(IN.uv_MainTex, flow.xy, jump, _FlowOffset, _Tiling, time, false);
+			float3 uvwB = FlowUVW(IN.uv_MainTex, flow.xy, jump, _FlowOffset, _Tiling, time, true);
 
-			float finalHeightScale =
-				flow.z * _HeightScaleModulated + _HeightScale;
+			float finalHeightScale = flow.z * _HeightScaleModulated + _HeightScale;
 
-			float3 dhA =
-				UnpackDerivativeHeight(tex2D(_DerivHeightMap, uvwA.xy)) *
-				(uvwA.z * finalHeightScale);
-			float3 dhB =
-				UnpackDerivativeHeight(tex2D(_DerivHeightMap, uvwB.xy)) *
-				(uvwB.z * finalHeightScale);
+			float3 dhA = UnpackDerivativeHeight(tex2D(_DerivHeightMap, uvwA.xy)) * (uvwA.z * finalHeightScale);
+			float3 dhB = UnpackDerivativeHeight(tex2D(_DerivHeightMap, uvwB.xy)) * (uvwB.z * finalHeightScale);
 			o.Normal = normalize(float3(-(dhA.xy + dhB.xy), 1));
 
 			fixed4 texA = tex2D(_MainTex, uvwA.xy) * uvwA.z;
