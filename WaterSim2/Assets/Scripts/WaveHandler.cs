@@ -54,25 +54,15 @@ public class WaveHandler : MonoBehaviour
 
     public float GetWaveYPos(Vector3 position, float timeSinceStart)
     {
-        if (isMoving && waveType == 0)
-        {
-            return SinXWave(position, speed, scale, waveDistance, noiseStrength, noiseWalk, timeSinceStart);
-        }
-        else if (isMoving && waveType == 1)
-        {
-            return CustomWaveFunc(position, timeSinceStart);
-        }
-        else
-        {
-            return 0f;
-        }
+        return CustomWaveFunc3(position, timeSinceStart);
     }
     public float DistanceToWater(Vector3 position, float timeSinceStart)
     {
         float waterHeight = GetWaveYPos(position, timeSinceStart);
 
         float distanceToWater = position.y - waterHeight;
-
+        distanceToWater = Mathf.Abs(distanceToWater);
+        //Debug.DrawLine(position, new Vector3(position.x, waterHeight, position.z), Color.red);
         return distanceToWater;
     }
 
@@ -163,9 +153,9 @@ public class WaveHandler : MonoBehaviour
 
     //customGerstnerWavemult
 
-    public float CustomWaveFunc(Vector3 pos, float timeSinceStart) //returns modified xyz for given xyz (original wave modifier)
+    public Vector3 CustomWaveFunc(Vector3 pos, float timeSinceStart) //returns modified xyz for given xyz (original wave modifier)
     {
-        pos.y = 0;
+        //pos.y = 0;
         Vector3 p = pos;
         Vector3 originalPoint = pos;
 
@@ -173,7 +163,7 @@ public class WaveHandler : MonoBehaviour
         p += GerstnerWave(waveB, originalPoint, timeSinceStart);
         p += GerstnerWave(waveC, originalPoint, timeSinceStart);
 
-        return p.y;
+        return p;
     }
 
     public Vector3 CustomWaveFunc2(Vector3 pos, float timeSinceStart) //returns aproximated xyz for xy
@@ -241,7 +231,7 @@ public class WaveHandler : MonoBehaviour
         Debug.DrawLine(start5, p5, Color.cyan);
         Debug.DrawLine(start5, end5, Color.cyan);
         Debug.DrawLine(end5, p5, Color.cyan);
-        
+
         //return 5th iteration
         return p5;
     }
@@ -249,8 +239,9 @@ public class WaveHandler : MonoBehaviour
     public float CustomWaveFunc3(Vector3 pos, float timeSinceStart) //returns only height of given xy
     {
         //pos.y = 0;
-
+        Debug.Log(pos);
         //original
+        pos.y = 0.0f;
         Vector3 p1 = pos;
         Vector3 originalPoint = pos;
         p1 += GerstnerWave(waveA, originalPoint, timeSinceStart);
@@ -261,9 +252,9 @@ public class WaveHandler : MonoBehaviour
         Vector3 end1 = originalPoint + new Vector3(p1.x, originalPoint.y, p1.z);
         Vector3 length1 = end1 - start1;
         //debug
-        Debug.DrawLine(start1, p1, Color.yellow);
-        Debug.DrawLine(start1, end1, Color.yellow);
-        Debug.DrawLine(end1, p1, Color.yellow);
+        //Debug.DrawLine(start1, p1, Color.yellow);
+        //Debug.DrawLine(start1, end1, Color.yellow);
+        //Debug.DrawLine(end1, p1, Color.yellow);
 
         //third iteration
         Vector3 start2 = start1 - length1;
@@ -272,9 +263,9 @@ public class WaveHandler : MonoBehaviour
         p2 += GerstnerWave(waveC, start2, timeSinceStart);
         Vector3 end2 = originalPoint + new Vector3(p2.x, originalPoint.y, p2.z);
         //debug
-        Debug.DrawLine(start2, p2, Color.green);
-        Debug.DrawLine(start2, end2, Color.green);
-        Debug.DrawLine(end2, p2, Color.green);
+        //Debug.DrawLine(start2, p2, Color.green);
+        //Debug.DrawLine(start2, end2, Color.green);
+        //Debug.DrawLine(end2, p2, Color.green);
 
         //third iteration
         Vector3 delta2 = end2 - originalPoint;
@@ -284,9 +275,9 @@ public class WaveHandler : MonoBehaviour
         p3 += GerstnerWave(waveC, start3, timeSinceStart);
         Vector3 end3 = originalPoint + new Vector3(p3.x, originalPoint.y, p3.z);
         //debug
-        Debug.DrawLine(start3, p3, Color.red);
-        Debug.DrawLine(start3, end3, Color.red);
-        Debug.DrawLine(end3, p3, Color.red);
+        //Debug.DrawLine(start3, p3, Color.red);
+        //Debug.DrawLine(start3, end3, Color.red);
+        //Debug.DrawLine(end3, p3, Color.red);
 
         //fourth iteration
         Vector3 delta3 = end3 - originalPoint;
@@ -296,9 +287,9 @@ public class WaveHandler : MonoBehaviour
         p4 += GerstnerWave(waveC, start4, timeSinceStart);
         Vector3 end4 = originalPoint + new Vector3(p4.x, originalPoint.y, p4.z);
         //debug
-        Debug.DrawLine(start4, p4, Color.blue);
-        Debug.DrawLine(start4, end4, Color.blue);
-        Debug.DrawLine(end4, p4, Color.blue);
+        //Debug.DrawLine(start4, p4, Color.blue);
+        //Debug.DrawLine(start4, end4, Color.blue);
+        //Debug.DrawLine(end4, p4, Color.blue);
 
         //fifth iteration
         Vector3 delta4 = end4 - originalPoint;
@@ -308,11 +299,14 @@ public class WaveHandler : MonoBehaviour
         p5 += GerstnerWave(waveC, start5, timeSinceStart);
         Vector3 end5 = originalPoint + new Vector3(p5.x, originalPoint.y, p5.z);
         //debug
-        Debug.DrawLine(start5, p5, Color.cyan);
-        Debug.DrawLine(start5, end5, Color.cyan);
-        Debug.DrawLine(end5, p5, Color.cyan);
+        //Debug.DrawLine(start5, p5, Color.cyan);
+        //Debug.DrawLine(start5, end5, Color.cyan);
+        //Debug.DrawLine(end5, p5, Color.cyan);
 
         //return 5th iteration
+        //Vector3 heightAtWater = new Vector3();
+        //if(pos.y - p5.y < 0.0f)
+        //    Debug.DrawLine(pos, new Vector3(pos.x, p5.y, pos.z), Color.red);
         return p5.y;
     }
 }

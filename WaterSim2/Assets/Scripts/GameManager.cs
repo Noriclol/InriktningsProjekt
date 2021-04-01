@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("GameManager Instance found and destroyed");
         }
         instance = this;
-        secondsSinceStart = Time.time;
+        secondsSinceStart = 0.0f;
         oceanHandler = oceanHandlerObj.GetComponent<OceanHandler>();
         waveHandler = gameObject.GetComponent<WaveHandler>();
 
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        secondsSinceStart = Time.time;
+        secondsSinceStart += Time.deltaTime;
     }
     //private void SpawnOcean();
 }

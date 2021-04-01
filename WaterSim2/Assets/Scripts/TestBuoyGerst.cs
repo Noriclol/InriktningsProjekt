@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class TestBuoyGerst : MonoBehaviour
 {
-    Transform origo;
+    //Vector3 startPos;
 
     private void Start()
     {
-        //
-        origo = transform;
+        //startPos = transform.position;
     }
     void Update()
     {
-        origo.position = new Vector3(0,0,0);
-        //transform.position = WaveHandler.instance.CustomWaveFunc2(origo.position, GameManager.secondsSinceStart); //aproximated height of xy
-        transform.position = new Vector3(0, WaveHandler.instance.CustomWaveFunc3(origo.position, GameManager.secondsSinceStart), 0); // approximated height of xy but with unmodified xy
+        Vector3 startPos;
+        startPos = transform.position;
+        //startPos.y = 0.0f;
+        Debug.Log("before: " + startPos);
+        transform.position = WaveHandler.instance.CustomWaveFunc(startPos, GameManager.secondsSinceStart); //aproximated height of xy
+        Debug.DrawLine(startPos, WaveHandler.instance.CustomWaveFunc2(startPos, GameManager.secondsSinceStart), Color.red);
+        
+        //startPos = new Vector3(transform.position.x, WaveHandler.instance.CustomWaveFunc3(startPos, GameManager.secondsSinceStart), transform.position.z); // approximated height of xy but with unmodified xy
+        transform.position = startPos;
+        Debug.Log("after: " + startPos);
     }
 }

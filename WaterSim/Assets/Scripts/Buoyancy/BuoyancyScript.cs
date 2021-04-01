@@ -20,7 +20,6 @@ public class BuoyancyScript : MonoBehaviour
     private Rigidbody rb;
     private Mesh underwaterMesh;
     private ShipAlgoritms algorithmLib;
-    private MeshGridGenerator grid;
 
     private float waterDensity = 1027f;
     
