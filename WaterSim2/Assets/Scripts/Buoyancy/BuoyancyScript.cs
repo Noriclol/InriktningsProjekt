@@ -41,7 +41,7 @@ public class BuoyancyScript : MonoBehaviour
             TriangleData triangleData = underWaterTriangleData[i];
             Vector3 buoyancyForce = BuoyancyForce(waterDensity, triangleData);
 
-            shipRB.AddForceAtPosition(-buoyancyForce, triangleData.center, ForceMode.Force);
+            shipRB.AddForceAtPosition(buoyancyForce, triangleData.center, ForceMode.Force);
 
             //Normal
             //Debug.DrawRay(triangleData.center, triangleData.normal * 3f, Color.white);

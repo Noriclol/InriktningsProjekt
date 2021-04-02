@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipMath : MonoBehaviour
+public class ShipMath
 {
     //general fields(applicable on several Algorithms)
     private Transform shipTransform;
@@ -24,26 +24,11 @@ public class ShipMath : MonoBehaviour
         //Init the arrays and lists
         shipVerts = actor.GetComponent<MeshFilter>().mesh.vertices;
         shipTris = actor.GetComponent<MeshFilter>().mesh.triangles;
-
-        //Debug.Log("tris " + shipTris);
-
-        int vertIndex = 0;
         //The boat vertices in global position
         shipVertsGlobal = new Vector3[shipVerts.Length];
-        foreach(var vertex in shipVerts)
-        {
-            shipVertsGlobal[vertIndex] = vertex;
-            vertIndex++;
-        }
 
         //Find all the distances to water once because some triangles share vertices, so reuse
-        int distIndex = 0;
         allDistancesToWater = new float[shipVerts.Length];
-        foreach (var dist  in allDistancesToWater)
-        {
-            allDistancesToWater[distIndex] = 0.0f;
-            distIndex++;
-        }
     }
     public void GenerateUnderwaterMesh() // need to add watercontroller
     {

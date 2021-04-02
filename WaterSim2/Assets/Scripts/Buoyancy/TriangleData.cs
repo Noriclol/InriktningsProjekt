@@ -16,7 +16,7 @@ public struct TriangleData {
 
         this.center = (p0 + p1 + p2) / 3f;
 
-        this.distanceToSurface = Mathf.Abs(1); //plug distance to water here!
+        this.distanceToSurface = Mathf.Abs(WaveHandler.instance.CustomWaveFunc3(this.center, Time.time)); //plug distance to water here!
         this.normal = Vector3.Cross(p1 - p0, p2 - p0).normalized;
 
         //area
