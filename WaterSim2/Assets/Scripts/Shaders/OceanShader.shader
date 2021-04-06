@@ -1,4 +1,6 @@
-﻿
+﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
+
 Shader "Custom/OceanShader"
 {
     Properties
@@ -17,6 +19,9 @@ Shader "Custom/OceanShader"
         _FlowOffset("Flow Offset", Float) = 0
         _HeightScale("Height Scale, Constant", Float) = 0.25
         _HeightScaleModulated("Height Scale, Modulated", Float) = 0.75
+
+        //sinewave noise
+        _NoiseTex("Noise Texture", 2D) = "white" {}
 
         //standard fields
         _Glossiness ("Smoothness", Range(0,1)) = 0.5
@@ -43,6 +48,15 @@ Shader "Custom/OceanShader"
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+
+        //Water parameters
+        sampler2D _NoiseTex;
+        float _WaterScale;
+        float _WaterSpeed;
+        float _WaterDistance;
+        float _WaterNoiseStrength;
+        float _WaterNoiseWalk;
+
 
         //wavetype
         int _WaveType;
@@ -123,6 +137,21 @@ Shader "Custom/OceanShader"
             color.a = 1;
         }
 
+        //sinewave functions
+        float3 getWavePos(float3 pos)
+        {
+            pos.y = 0.0;
+
+            float waveType = pos.z;
+
+            pos.y += sin((_WaterTime * _WaterSpeed + waveType) / _WaterDistance) * _WaterScale;
+
+            //Add noise
+            //pos.y += tex2Dlod(_NoiseTex, float4(pos.x, pos.z + sin(_WaterTime * 0.1), 0.0, 0.0) * _WaterNoiseWalk).a * _WaterNoiseStrength;
+
+            return pos;
+        }
+
         //gerstnerwave functions
         float3 GerstnerWave(float4 wave, float3 p, inout float3 tangent, inout float3 binormal) {
             float steepness = wave.z;
@@ -162,22 +191,31 @@ Shader "Custom/OceanShader"
             //Get the global position of the vertice
             float4 worldPos = mul(unity_ObjectToWorld, IN.vertex);
 
-            //customwavefunc
+            //sine
+            //float3 withWave = getWavePos(worldPos.xyz);
+
+
+            //gerst
             float3 gridPoint = worldPos.xyz;
             float3 tangent = float3(1, 0, 0);
             float3 binormal = float3(0, 0, 1);
             float3 p = gridPoint;
             p += GerstnerWave(_WaveA, gridPoint, tangent, binormal);
-            p += GerstnerWave(_WaveB, gridPoint, tangent, binormal);
-            p += GerstnerWave(_WaveC, gridPoint, tangent, binormal);
+            //p += GerstnerWave(_WaveB, gridPoint, tangent, binormal);
+            //p += GerstnerWave(_WaveC, gridPoint, tangent, binormal);
             float3 normal = normalize(cross(binormal, tangent));
             
             //Convert the position back to local
             float4 localPos = mul(unity_WorldToObject, float4(p.x, p.y, p.z, worldPos.w));
+            //float4 localPos = mul(unity_WorldToObject, float4(withWave, worldPos.w));
 
             //Assign the modified vertice
+            //gerst
             IN.vertex.xyz = localPos;
             IN.normal = normal;
+            //sine
+            //IN.vertex = localPos;
+            
         }
 
 

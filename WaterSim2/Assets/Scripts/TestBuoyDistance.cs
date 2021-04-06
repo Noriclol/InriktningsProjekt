@@ -16,5 +16,7 @@ public class TestBuoyDistance : MonoBehaviour
     void Update()
     {
         gameObject.transform.position = new Vector3(transform.position.x, WaveHandler.instance.DistanceToWater(startPos, GameManager.secondsSinceStart), transform.position.z);
+        //Debug.DrawLine(startPos, transform.position, Color.yellow);
     }
 }
+
