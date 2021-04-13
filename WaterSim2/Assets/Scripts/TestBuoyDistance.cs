@@ -15,7 +15,9 @@ public class TestBuoyDistance : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.position = new Vector3(transform.position.x, WaveHandler.instance.DistanceToWater(startPos, GameManager.secondsSinceStart), transform.position.z);
+        Vector3 distance = new Vector3(transform.position.x, WaveHandler.instance.DistanceToWater(startPos, GameManager.secondsSinceStart), transform.position.z);
+        //gameObject.transform.position = new Vector3(transform.position.x, WaveHandler.instance.DistanceToWater(startPos, GameManager.secondsSinceStart), transform.position.z);
+        //Debug.DrawLine(startPos, new Vector3(position.x, waterHeight  , position.z), Color.red);
         //Debug.DrawLine(startPos, transform.position, Color.yellow);
     }
 }

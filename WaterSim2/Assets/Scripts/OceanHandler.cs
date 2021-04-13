@@ -5,7 +5,7 @@ using System.Threading;
 
 public class OceanHandler : MonoBehaviour
 {
-    public OceanHandler instance;
+    public static OceanHandler instance;
     //public GameManager instanceRef;
     public GameObject playerObj;
     public GameObject gridRef;
