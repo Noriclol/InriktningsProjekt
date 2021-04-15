@@ -53,7 +53,7 @@ public class BuoyancyScript : MonoBehaviour
         for (int i = 0; i < underWaterTriangleData.Count; i++)
         {
             TriangleData triangleData = underWaterTriangleData[i];
-            Vector3 buoyancyForce = BuoyancyForce(waterDensity, triangleData);
+            Vector3 buoyancyForce = ShipMath.BuoyancyForce(waterDensity, triangleData);
 
             shipRB.AddForceAtPosition(buoyancyForce, triangleData.center, ForceMode.Force);
 
@@ -64,16 +64,24 @@ public class BuoyancyScript : MonoBehaviour
             //Debug.DrawRay(triangleData.center, buoyancyForce.normalized * -3f, Color.blue);
         }
     }
-
-    private Vector3 BuoyancyForce(float waterDensity, TriangleData triangleData)
+    void AddAboveWaterForces()
     {
-        Vector3 buoyancyForce = waterDensity * Physics.gravity.y * triangleData.distanceToSurface * triangleData.area * triangleData.normal;
 
-        //The vertical component of the hydrostatic forces don't cancel out but the horizontal do
+    }
 
-        //buoyancyForce.x = 0f;
-        //buoyancyForce.z = 0f;
 
-        return buoyancyForce;
+    private void CalculateSlammingVelocities(List<SlammingForceData> slammingForceData)
+    {
+        for (int i = 0; i < slammingForceData.Count; i++)
+        {
+            //Set the new velocity to the old velocity
+            slammingForceData[i].previousVelocity = slammingForceData[i].velocity;
+
+            //Center of the triangle in world space
+            Vector3 center = transform.TransformPoint(slammingForceData[i].triangleCenter);
+
+            //Get the current velocity at the center of the triangle
+            slammingForceData[i].velocity = ShipMath.GetTriangleVelocity(shipRB, center);
+        }
     }
 }

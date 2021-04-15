@@ -18,7 +18,7 @@ public class ShipMath
     public List<TriangleData> underWaterTriangleData = new List<TriangleData>();
     public List<TriangleData> aboveWaterTriangleData = new List<TriangleData>();
 
-
+    //for volume approximation
     private MeshCollider underWaterMeshCollider;
 
     public List<SlammingForceData> slammingForceData = new List<SlammingForceData>();
@@ -47,16 +47,26 @@ public class ShipMath
         allDistancesToWater = new float[shipVerts.Length];
 
         // Setup the slamming force data
-        for (int i = 0; i < (shipTriangles.Length / 3); i++)
+        for (int i = 0; i < (shipTris.Length / 3); i++)
         {
             slammingForceData.Add(new SlammingForceData());
         }
-
+        CalculateOriginalTrianglesArea();
     }
-    public void GenerateUnderwaterMesh() // need to add watercontroller
+    public void GenerateUnderwaterMesh() // generate under(and above)water mesh
     {
         //Reset
         underWaterTriangleData.Clear();
+        aboveWaterTriangleData.Clear();
+
+        for (int j = 0; j < slammingForceData.Count; j++)
+        {
+            slammingForceData[j].previousSubmergedArea = slammingForceData[j].submergedArea;
+        }
+        indexOfOriginalTriangle.Clear();
+
+        //reset time here
+
 
         //Find all the distances to water once because some triangles share vertices, so reuse
         for (int j = 0; j < shipVerts.Length; j++) {
@@ -83,7 +93,8 @@ public class ShipMath
 
 
         //Loop through all the triangles (3 vertices at a time = 1 triangle)
-        int i = 0;
+        int i = 0, triangleCounter = 0;
+
         while (i < shipTris.Length)
         {
             //Loop through the 3 vertices
@@ -103,6 +114,13 @@ public class ShipMath
             //All vertices are above the water
             if (vertexData[0].distance > 0f && vertexData[1].distance > 0f && vertexData[2].distance > 0f)
             {
+                Vector3 p1 = vertexData[0].globalVertexPos;
+                Vector3 p2 = vertexData[1].globalVertexPos;
+                Vector3 p3 = vertexData[2].globalVertexPos;
+
+                aboveWaterTriangleData.Add(new TriangleData(p1, p2, p3, shipRB, GameManager.secondsSinceStart));
+
+                slammingForceData[triangleCounter].submergedArea = 0f;
                 continue;
             }
 
@@ -117,7 +135,9 @@ public class ShipMath
                 Vector3 p3 = vertexData[2].globalVertexPos;
 
                 //Save the triangle
-                underWaterTriangleData.Add(new TriangleData(p1, p2, p3));
+                underWaterTriangleData.Add(new TriangleData(p1, p2, p3, shipRB, GameManager.secondsSinceStart));
+                slammingForceData[triangleCounter].submergedArea = slammingForceData[triangleCounter].originalArea;
+                indexOfOriginalTriangle.Add(triangleCounter);
             }
             //1 or 2 vertices are below the water
             else
@@ -130,12 +150,12 @@ public class ShipMath
                 //One vertice is above the water, the rest is below
                 if (vertexData[0].distance > 0f && vertexData[1].distance < 0f && vertexData[2].distance < 0f)
                 {
-                    AddTrianglesOneAboveWater(vertexData);
+                    AddTrianglesOneAboveWater(vertexData, triangleCounter);
                 }
                 //Two vertices are above the water, the other is below
                 else if (vertexData[0].distance > 0f && vertexData[1].distance > 0f && vertexData[2].distance < 0f)
                 {
-                    AddTrianglesTwoAboveWater(vertexData);
+                    AddTrianglesTwoAboveWater(vertexData, triangleCounter);
                 }
             }
         }
@@ -183,7 +203,7 @@ public class ShipMath
     }
 
     //Build the new triangles where one of the old vertices is above the water
-    private void AddTrianglesOneAboveWater(List<VertexData> vertexData)
+    private void AddTrianglesOneAboveWater(List<VertexData> vertexData, int triangleCounter)
     {
         //H is always at position 0
         Vector3 H = vertexData[0].globalVertexPos;
@@ -250,12 +270,20 @@ public class ShipMath
 
         //Save the data, such as normal, area, etc      
         //2 triangles below the water  
-        underWaterTriangleData.Add(new TriangleData(M, I_M, I_L));
-        underWaterTriangleData.Add(new TriangleData(M, I_L, L));
+        underWaterTriangleData.Add(new TriangleData(M, I_M, I_L, shipRB, GameManager.secondsSinceStart));
+        underWaterTriangleData.Add(new TriangleData(M, I_L, L, shipRB, GameManager.secondsSinceStart));
+        //1 triangle above the water
+        aboveWaterTriangleData.Add(new TriangleData(I_M, H, I_L, shipRB, GameManager.secondsSinceStart));
+
+        float totalArea = ShipMath.GetTriangleArea(M, I_M, I_L) + ShipMath.GetTriangleArea(M, I_L, L);
+        slammingForceData[triangleCounter].submergedArea = totalArea;
+            
+        indexOfOriginalTriangle.Add(triangleCounter);
+        indexOfOriginalTriangle.Add(triangleCounter);
     }
 
     //Build the new triangles where two of the old vertices are above the water
-    private void AddTrianglesTwoAboveWater(List<VertexData> vertexData)
+    private void AddTrianglesTwoAboveWater(List<VertexData> vertexData, int triangleCounter)
     {
         //H and M are above the water
         //H is after the vertice that's below water, which is L
@@ -321,7 +349,15 @@ public class ShipMath
 
         //Save the data, such as normal, area, etc
         //1 triangle below the water
-        underWaterTriangleData.Add(new TriangleData(L, J_H, J_M));
+        underWaterTriangleData.Add(new TriangleData(L, J_H, J_M, shipRB, GameManager.secondsSinceStart));
+        //2 triangles below the water
+        aboveWaterTriangleData.Add(new TriangleData(J_H, H, J_M, shipRB, GameManager.secondsSinceStart));
+        aboveWaterTriangleData.Add(new TriangleData(J_M, H, M, shipRB, GameManager.secondsSinceStart));
+        //Calculate the submerged area
+        slammingForceData[triangleCounter].submergedArea = BoatPhysicsMath.GetTriangleArea(L, J_H, J_M);
+
+        indexOfOriginalTriangle.Add(triangleCounter);
+
     }
 
     //Help class to store triangle data so we can sort the distances
@@ -360,6 +396,38 @@ public class ShipMath
         mesh.triangles = triangles.ToArray();
 
         mesh.RecalculateBounds();
+    }
+
+    private void CalculateOriginalTrianglesArea()
+    {
+        //Loop through all the triangles (3 vertices at a time = 1 triangle)
+        int i = 0;
+        int triangleCounter = 0;
+        while (i < shipTris.Length)
+        {
+            Vector3 p1 = shipVerts[shipTris[i]];
+
+            i++;
+
+            Vector3 p2 = shipVerts[shipTris[i]];
+
+            i++;
+
+            Vector3 p3 = shipVerts[shipTris[i]];
+
+            i++;
+
+            //Calculate the area of the triangle
+            float triangleArea = GetTriangleArea(p1, p2, p3);
+
+            //Store the area in a list
+            slammingForceData[triangleCounter].originalArea = triangleArea;
+
+            //The total area
+            boatArea += triangleArea;
+
+            triangleCounter += 1;
+        }
     }
 
     /*-----------TriangleAlgoritm----END-------*/
@@ -608,12 +676,26 @@ public class ShipMath
             return Vector3.zero;
         }
     }
+
     /*-----------ResistanceAlgoritm----END-------*/
 
-
-
     /*-----------BouyancyForceAlgoritm----BEGIN-------*/
+
+    public static Vector3 BuoyancyForce(float waterDensity, TriangleData triangleData)
+    {
+        Vector3 buoyancyForce = waterDensity * Physics.gravity.y * triangleData.distanceToSurface * triangleData.area * triangleData.normal;
+
+        //The vertical component of the hydrostatic forces don't cancel out but the horizontal do
+        buoyancyForce.x = 0f;
+        buoyancyForce.z = 0f;
+
+        buoyancyForce = CheckForceIsValid(buoyancyForce, "Buoyancy");
+
+        return buoyancyForce;
+    }
+
     /*-----------BouyancyForceAlgoritm----END-------*/
+
     /*-----------NewAlgoritm----END-------*/
 
     /*-----------Structs----BEGIN-------*/

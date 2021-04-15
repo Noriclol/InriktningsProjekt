@@ -4,9 +4,9 @@ using UnityEngine;
 
 public struct TriangleData {
 
+    public Vector3 p0;
     public Vector3 p1;
     public Vector3 p2;
-    public Vector3 p3;
 
     //The center of the triangle
     public Vector3 center;
@@ -41,16 +41,16 @@ public struct TriangleData {
         this.center = (p0 + p1 + p2) / 3f;
 
         //Distance to the surface from the center of the triangle
-        this.distanceToSurface = Mathf.Abs(WaterController.current.DistanceToWater(this.center, timeSinceStart));
+        this.distanceToSurface = Mathf.Abs(WaveHandler.instance.DistanceToWater(this.center, timeSinceStart));
 
         //Normal to the triangle
         this.normal = Vector3.Cross(p1 - p0, p2 - p0).normalized;
 
         //Area of the triangle
-        this.area = BoatPhysicsMath.GetTriangleArea(p0, p1, p2);
+        this.area = ShipMath.GetTriangleArea(p0, p1, p2);
 
         //Velocity vector of the triangle at the center
-        this.velocity = BoatPhysicsMath.GetTriangleVelocity(boatRB, this.center);
+        this.velocity = ShipMath.GetTriangleVelocity(boatRB, this.center);
 
         //Velocity direction
         this.velocityDir = this.velocity.normalized;
