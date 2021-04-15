@@ -4,18 +4,32 @@ using UnityEngine;
 
 public class BuoyancyScript : MonoBehaviour
 {
+
     public GameObject underWaterObj;
-    private ShipMath shipMath;
+    public GameObject aboveWaterObj;
     private Mesh underWaterMesh;
+    private Mesh aboveWaterMesh;
+
+    private ShipMath shipMath;
     private Rigidbody shipRB;
+    //densities
     private float waterDensity = 1027f;
+    private float airDensity = 1.225f;
+    //Drag coefficients
+    public const float C_d_flat_plate_perpendicular_to_flow = 1.28f;
+
+    void Awake()
+    {
+        shipRB = this.GetComponent<Rigidbody>();
+    }
+
 
     void Start()
     {
         shipMath = new ShipMath();
-        shipRB = gameObject.GetComponent<Rigidbody>();
-        shipMath.InitTriCutAlgoritm(gameObject);
+        shipMath.InitTriCutAlgoritm(gameObject, underWaterObj, aboveWaterObj, shipRB);
         underWaterMesh = underWaterObj.GetComponent<MeshFilter>().mesh;
+        aboveWaterMesh = aboveWaterObj.GetComponent<MeshFilter>().mesh;
     }
 
     void Update()
