@@ -354,7 +354,7 @@ public class ShipMath
         aboveWaterTriangleData.Add(new TriangleData(J_H, H, J_M, shipRB, GameManager.secondsSinceStart));
         aboveWaterTriangleData.Add(new TriangleData(J_M, H, M, shipRB, GameManager.secondsSinceStart));
         //Calculate the submerged area
-        slammingForceData[triangleCounter].submergedArea = BoatPhysicsMath.GetTriangleArea(L, J_H, J_M);
+        slammingForceData[triangleCounter].submergedArea = ShipMath.GetTriangleArea(L, J_H, J_M);
 
         indexOfOriginalTriangle.Add(triangleCounter);
 
@@ -396,6 +396,16 @@ public class ShipMath
         mesh.triangles = triangles.ToArray();
 
         mesh.RecalculateBounds();
+    }
+
+    public float CalculateUnderWaterLength()
+    {
+        //Approximate the length as the length of the underwater mesh
+        float underWaterLength = underWaterMesh.bounds.size.z;
+
+        //Debug.Log(underWaterMesh.bounds.size.z);
+
+        return underWaterLength;
     }
 
     private void CalculateOriginalTrianglesArea()
