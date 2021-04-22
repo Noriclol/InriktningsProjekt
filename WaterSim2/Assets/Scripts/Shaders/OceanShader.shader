@@ -201,8 +201,8 @@ Shader "Custom/OceanShader"
             float3 binormal = float3(0, 0, 1);
             float3 p = gridPoint;
             p += GerstnerWave(_WaveA, gridPoint, tangent, binormal);
-            //p += GerstnerWave(_WaveB, gridPoint, tangent, binormal);
-            //p += GerstnerWave(_WaveC, gridPoint, tangent, binormal);
+            p += GerstnerWave(_WaveB, gridPoint, tangent, binormal);
+            p += GerstnerWave(_WaveC, gridPoint, tangent, binormal);
             float3 normal = normalize(cross(binormal, tangent));
             
             //Convert the position back to local
