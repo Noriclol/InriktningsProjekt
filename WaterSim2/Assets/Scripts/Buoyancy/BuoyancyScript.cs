@@ -25,7 +25,7 @@ public class BuoyancyScript : MonoBehaviour
     {
         shipRB = this.GetComponent<Rigidbody>();
         shipRB.mass = shipType.mass;
-        //shipRB.centerOfMass = centerOfMass;
+        shipRB.centerOfMass = centerOfMass;
     }
 
 
