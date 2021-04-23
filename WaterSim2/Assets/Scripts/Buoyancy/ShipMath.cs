@@ -612,7 +612,6 @@ public class ShipMath
         slammingForce *= -1f;
 
         slammingForce = CheckForceIsValid(slammingForce, "Slamming");
-
         return slammingForce;
 
     }
@@ -681,7 +680,7 @@ public class ShipMath
         }
         else
         {
-            Debug.Log(forceName += " force is NaN");
+            //Debug.Log(forceName += " force is NaN");
 
             return Vector3.zero;
         }

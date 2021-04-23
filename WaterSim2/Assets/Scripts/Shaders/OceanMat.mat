@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: OceanMat
   m_Shader: {fileID: 4800000, guid: 8845335da6576bb4698d669f34b32f5a, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -71,16 +71,16 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _FlowOffset: 0
-    - _FlowStrength: 0.058
+    - _FlowStrength: 0.04
     - _GlossMapScale: 1
     - _Glossiness: 0.478
     - _GlossyReflections: 1
     - _HeightScale: 0.25
     - _HeightScaleModulated: 0.75
     - _Metallic: 0.097
-    - _Mode: 0
+    - _Mode: 3
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _RefractionStrength: 0.424
@@ -93,7 +93,7 @@ Material:
     - _UVSec: 0
     - _VJump: 0.177
     - _WaterFogDensity: 0.21
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - _Color: {r: 0.056069776, g: 0.41634566, b: 0.5660378, a: 0.18431373}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

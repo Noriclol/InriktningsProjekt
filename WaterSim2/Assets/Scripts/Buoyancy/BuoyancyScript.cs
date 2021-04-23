@@ -56,6 +56,7 @@ public class BuoyancyScript : MonoBehaviour
         {
             AddAboveWaterForces();
         }
+        
         //Debug.Log("Triangles Under Water: " + shipMath.underWaterTriangleData.Count);
     }
     void AddUnderWaterForces()
@@ -95,6 +96,8 @@ public class BuoyancyScript : MonoBehaviour
             //Debug.DrawRay(triangleData.center, buoyancyForce.normalized * -3f, Color.blue);
         }
     }
+
+
     void AddAboveWaterForces()
     {
         List<TriangleData> aboveWaterTriangleData = shipMath.aboveWaterTriangleData;
@@ -144,5 +147,10 @@ public class BuoyancyScript : MonoBehaviour
             //Get the current velocity at the center of the triangle
             slammingForceData[i].velocity = ShipMath.GetTriangleVelocity(shipRB, center);
         }
+    }
+
+    public void AddMotorForce()
+    {
+
     }
 }
