@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MenuScene.unity
+    path: Assets/WaterSim/Scenes/MenuScene.unity
     guid: fb406b4a4c42443408fc0d5be45bc315
   - enabled: 1
-    path: Assets/Scenes/PlayScene.unity
+    path: Assets/WaterSim/Scenes/PlayScene.unity
     guid: b8a917f6dff5fe04a925810d68944a3f
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: b604616940292f143a8033ecbc0259fd, type: 2}
