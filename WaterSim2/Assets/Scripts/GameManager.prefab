@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6919062801204018696
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6919062801204018934}
+  - component: {fileID: 6919062801204018935}
+  - component: {fileID: 6919062801204018933}
+  - component: {fileID: 6919062801204018932}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6919062801204018934
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6919062801204018696}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6919062801204018935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6919062801204018696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a300eb802145eb4287889a50d0573b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instance: {fileID: 0}
+  oceanHandlerObj: {fileID: 8308332455612215657, guid: 7ffa675294adfdf41ac4447923f17627, type: 3}
+  player: {fileID: 0}
+--- !u!114 &6919062801204018933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6919062801204018696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a37e4c737642db43b86f0d02baa8f70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMoving: 0
+  waveType: 0
+  scale: 3
+  speed: 1
+  waveDistance: 10
+  noiseStrength: 1
+  noiseWalk: 1
+  waveA: {x: 1, y: 0, z: 0.11, w: 70}
+  waveB: {x: 0, y: 1, z: 0.12, w: 50}
+  waveC: {x: 1, y: 1, z: 0.13, w: 100}
+--- !u!114 &6919062801204018932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6919062801204018696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cdeab73697486540b916fac5fb0dc5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocityReference: 0
+  C_PD1: 10
+  C_PD2: 10
+  f_P: 0.5
+  C_SD1: 10
+  C_SD2: 10
+  f_S: 0.5
+  p: 2
+  acc_max: 0
+  slammingCheat: 0

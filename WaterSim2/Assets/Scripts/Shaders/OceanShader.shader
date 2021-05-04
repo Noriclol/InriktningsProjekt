@@ -66,6 +66,9 @@ Shader "Custom/OceanShader"
         float _UJump, _VJump, _Tiling, _Speed, _FlowStrength, _FlowOffset;
         float _HeightScale, _HeightScaleModulated;
 
+
+
+        float a;
         //Fog fields
         sampler2D _CameraDepthTexture, _WaterBackground;
         float4 _CameraDepthTexture_TexelSize;
@@ -77,8 +80,10 @@ Shader "Custom/OceanShader"
 
         struct Input
         {
+
             float2 uv_MainTex;
             float4 screenPos;
+            float3 worldPos;
         };
 
         //Functions
@@ -232,7 +237,7 @@ Shader "Custom/OceanShader"
             flow *= _FlowStrength;
 
             float noise = tex2D(_FlowMap, IN.uv_MainTex).a;
-            float time = _Time.y * _Speed + noise;
+            float time = _WaterTime * _Speed + noise;
             float2 jump = float2(_UJump, _VJump);
 
             float3 uvwA = FlowUVW(IN.uv_MainTex, flow.xy, jump, _FlowOffset, _Tiling, time, false);
