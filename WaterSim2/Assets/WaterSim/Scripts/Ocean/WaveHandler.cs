@@ -229,9 +229,9 @@ public class WaveHandler : MonoBehaviour
         p1 += GerstnerWave(waveC, originalPoint, timeSinceStart);
 
         //original triangle
-        //Debug.DrawLine(originalPoint, p1, Color.red);
-        //Debug.DrawLine(originalPoint, new Vector3(p1.x, originalPoint.y, p1.z), Color.red);
-        //Debug.DrawLine(new Vector3(p1.x, originalPoint.y, p1.z), p1, Color.red);
+        Debug.DrawLine(originalPoint, p1, Color.red);
+        Debug.DrawLine(originalPoint, new Vector3(p1.x, originalPoint.y, p1.z), Color.red);
+        Debug.DrawLine(new Vector3(p1.x, originalPoint.y, p1.z), p1, Color.red);
 
         //calculation
         Vector3 start1 = originalPoint;
@@ -249,9 +249,9 @@ public class WaveHandler : MonoBehaviour
         p2 += GerstnerWave(waveC, start2, timeSinceStart);
         Vector3 end2 = new Vector3(p2.x, originalPoint.y, p2.z);
         //debug
-        //Debug.DrawLine(start2, p2, Color.green);
-        //Debug.DrawLine(start2, end2, Color.green);
-        //Debug.DrawLine(end2, p2, Color.green);
+        Debug.DrawLine(start2, p2, Color.green);
+        Debug.DrawLine(start2, end2, Color.green);
+        Debug.DrawLine(end2, p2, Color.green);
 
         //third iteration
         Vector3 delta2 = end2 - originalPoint;
@@ -261,9 +261,9 @@ public class WaveHandler : MonoBehaviour
         p3 += GerstnerWave(waveC, start3, timeSinceStart);
         Vector3 end3 = new Vector3(p3.x, originalPoint.y, p3.z);
         //debug
-        //Debug.DrawLine(start3, p3, Color.red);
-        //Debug.DrawLine(start3, end3, Color.red);
-        //Debug.DrawLine(end3, p3, Color.red);
+        Debug.DrawLine(start3, p3, Color.yellow);
+        Debug.DrawLine(start3, end3, Color.yellow);
+        Debug.DrawLine(end3, p3, Color.yellow);
 
         //fourth iteration
         Vector3 delta3 = end3 - originalPoint;
@@ -273,9 +273,9 @@ public class WaveHandler : MonoBehaviour
         p4 += GerstnerWave(waveC, start4, timeSinceStart);
         Vector3 end4 = new Vector3(p4.x, originalPoint.y, p4.z);
         //debug
-        //Debug.DrawLine(start4, p4, Color.blue);
-        //Debug.DrawLine(start4, end4, Color.blue);
-        //Debug.DrawLine(end4, p4, Color.blue);
+        Debug.DrawLine(start4, p4, Color.blue);
+        Debug.DrawLine(start4, end4, Color.blue);
+        Debug.DrawLine(end4, p4, Color.blue);
 
         //fifth iteration
         Vector3 delta4 = end4 - originalPoint;
@@ -283,15 +283,12 @@ public class WaveHandler : MonoBehaviour
         Vector3 p5 = start5 + GerstnerWave(waveA, start5, timeSinceStart);
         p5 += GerstnerWave(waveB, start5, timeSinceStart);
         p5 += GerstnerWave(waveC, start5, timeSinceStart);
-        //Vector3 end5 = originalPoint + new Vector3(p5.x, originalPoint.y, p5.z);
+
         //debug
-        //Debug.DrawLine(start5, p5, Color.cyan);
-        //Debug.DrawLine(start5, end5, Color.cyan);
-        //Debug.DrawLine(end5, p5, Color.cyan);
-        //p5 += originalPoint;
-        //return 5th iteration
-        //p5 += originalPoint;
-        //Vector3 surfaceDelta = new Vector3()
+        Vector3 end5 = originalPoint + new Vector3(p5.x, originalPoint.y, p5.z);
+        Debug.DrawLine(start5, p5, Color.cyan);
+        Debug.DrawLine(start5, end5, Color.cyan);
+        Debug.DrawLine(end5, p5, Color.cyan);
         return p5.y;
     }
 }

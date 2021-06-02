@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/3rdPersonFreeMovement/Scripts/Input System/PlayerControls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/WaterSim/3rdPersonFreeMovement/Scripts/Input System/PlayerControls.inputactions'
 
 using System;
 using System.Collections;
