@@ -7,4 +7,4 @@ scene order in build settings should be
 0: MenuScene
 1: PlayScene
 
-premade Build can be found in Build folder.
+premade Build can be found in Build.rar.
